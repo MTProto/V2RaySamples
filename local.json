@@ -1,0 +1,177 @@
+{
+  "log": {
+    "loglevel": "info"
+  },
+  "inbounds": [
+    {
+      "tag": "port80",
+      "port": 80,
+      "protocol": "vmess",
+      "allocate": {
+        "strategy": "always"
+      },
+      "settings": {
+        "clients": [
+          {
+            "id": "26214650-ce2d-4b2a-8b20-5f779bcf9363",
+            "level": 1,
+            "alterId": 0,
+            "email": "client@example.com"
+          }
+        ],
+        "disableInsecureEncryption": true
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "connectionReuse": true,
+          "path": "/graphql"
+        },
+        "security": "none",
+        "tcpSettings": {
+          "header": {
+            "type": "http",
+            "response": {
+              "version": "1.1",
+              "status": "200",
+              "reason": "OK",
+              "headers": {
+                "Content-Type": [
+                  "application/octet-stream",
+                  "application/x-msdownload",
+                  "text/html",
+                  "application/x-shockwave-flash"
+                ],
+                "Transfer-Encoding": [
+                  "chunked"
+                ],
+                "Connection": [
+                  "keep-alive"
+                ],
+                "Pragma": "no-cache"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "tag": "port4443",
+       "port": 4443, #Your transit node inbound port
+       "protocol": "dokodemo-door",
+       "settings": {
+          "address": "third.sboost.ir", #The overseas node ip in the node information you obtained
+          "port": 4443, #Foreign node ports in the node information you obtained
+          "network": "tcp"
+       }
+    },{
+      "tag": "port8080",
+       "port": 8080, #Your transit node inbound port
+       "protocol": "dokodemo-door",
+       "settings": {
+          "address": "third.sboost.ir", #The overseas node ip in the node information you obtained
+          "port": 8080, #Foreign node ports in the node information you obtained
+          "network": "tcp"
+       }
+    },{
+      "tag": "port81",
+       "port": 81, #Your transit node inbound port
+       "protocol": "dokodemo-door",
+       "settings": {
+          "address": "third.sboost.ir", #The overseas node ip in the node information you obtained
+          "port": 8888, #Foreign node ports in the node information you obtained
+          "network": "tcp"
+       }
+    },{
+      "tag": "port443",
+       "port": 443, #Your transit node inbound port
+       "protocol": "dokodemo-door",
+       "settings": {
+          "address": "third.sboost.ir", #The overseas node ip in the node information you obtained
+          "port": 443, #Foreign node ports in the node information you obtained
+          "network": "tcp"
+       }
+    }
+
+  ],
+  "outbounds": [
+    {
+      "tag": "Germany",
+      "protocol": "vmess",
+      "settings": {
+        "vnext": [
+          {
+            "address": "third.sboost.ir",
+            "port": 30000,
+            "users": [
+              {
+                "id": "00000000-0000-0000-0000-000000000000",
+                "alterId": 0
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "connectionReuse": true,
+          "path": "/graphql"
+        },
+        "security": "none",
+        "tcpSettings": {
+          "header": {
+            "type": "http",
+            "response": {
+              "version": "1.1",
+              "status": "200",
+              "reason": "OK",
+              "headers": {
+                "Content-Type": [
+                  "application/octet-stream",
+                  "application/x-msdownload",
+                  "text/html",
+                  "application/x-shockwave-flash"
+                ],
+                "Transfer-Encoding": [
+                  "chunked"
+                ],
+                "Connection": [
+                  "keep-alive"
+                ],
+                "Pragma": "no-cache"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+        "tag": "iran",
+        "protocol": "freedom",
+        "settings": {}
+    }
+  ],
+  "routing":{
+    "rules":[
+      {
+        "type":"field",
+        "inboundTag": ["port80","port81","port443","port8080","port4443"],
+        "domain": "regexp:sboost.ir$",
+        "outboundTag":"Germany"
+      },
+      {
+        "type":"field",
+        "inboundTag": ["port80","port81","port443","port8080","port4443"],
+        "domain": "regexp:.ir$",
+        "outboundTag":"iran"
+      },
+      {
+        "type":"field",
+        "inboundTag": ["port80","port81","port443","port8080","port4443"],
+        "outboundTag":"Germany"
+      }
+    ]
+  }
+
+}
